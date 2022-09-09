@@ -1,0 +1,32 @@
+indexer: tindex
+solName: shreyas/drama
+schema:
+  file: ./schema.json
+dataSources:
+  - kind: solana/program
+    name: test_js
+    network: devnet
+    source:
+      programId: Hoky7nBXPQHS1Dt69d95YbbQ5ibHGV6mhGHQWSFu6aZK
+      idl: test_js
+      startBlock: 160903137
+    mapping:
+      kind: solana/events
+      entities:
+        - U64Event
+        - StringEvent
+        - PubkeyEvent
+        - U8Event
+      idls:
+        - name: test_js
+          file: ./idls/test_js.json
+      eventHandlers:
+        - event: U64Event(data u64,label indexed string)
+          handler: handleU64Event
+        - event: StringEvent(uid u64,data string,label indexed string)
+          handler: handleStringEvent
+        - event: PubkeyEvent(uid u64,data publicKey,label indexed string)
+          handler: handlePubkeyEvent
+        - event: U8Event(uid u64,data u8,label indexed string)
+          handler: handleU8Event
+      file: ./src/mapping.ts

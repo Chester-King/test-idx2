@@ -1,0 +1,16 @@
+{
+  "name": "tindex",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "grapher build"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@project-serum/anchor": "^0.25.0",
+    "@types/node": "^18.6.5",
+    "ts-node": "^10.9.1"
+  }
+}
