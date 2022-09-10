@@ -7,9 +7,9 @@ dataSources:
     name: test_js
     network: devnet
     source:
-      programId: 8k6RhGmv68HmsrLwgLVf1TcqpqXD6m1pZRjxLbbPtWtZ
+      programId: FzWiRJf7imkw2jhmcnR9Ejm6aLCpSoSDNzuYatC8WaWB
       idl: test_js
-      startBlock: 161170805
+      startBlock: 161181438
     mapping:
       kind: solana/events
       entities:
