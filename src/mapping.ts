@@ -79,6 +79,7 @@ export async function handleU8Event(params : U8Event) {
 		norment.Uid = params.uid.toNumber();
 	}
 	norment.u8value = params.data;
+	norment.combvalue = norment.svalue+norment.keyvalue+params.data.toString()
 
 	let advment =  await AdvanceEntity.load(params.uid.toNumber());
 	if (advment == null) {

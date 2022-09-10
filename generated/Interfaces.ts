@@ -30,6 +30,7 @@ export class NormalEntity {
 	"svalue":string;
 	"u8value":number;
 	"keyvalue":string;
+	"combvalue":string;
 
 	static async load(Uid:number) : Promise<null | NormalEntity> {
 		return null;

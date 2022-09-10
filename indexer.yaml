@@ -1,5 +1,5 @@
-indexer: tindex
-solName: shreyas/drama
+indexer: PRJ
+solName: Chester-King/testPRJ
 schema:
   file: ./schema.json
 dataSources:

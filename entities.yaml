@@ -13,6 +13,9 @@ entities:
       - name: keyvalue
         type: string
         primary: false
+      - name: combvalue
+        type: string
+        primary: false
   - name: AdvanceEntity
     params:
       - name: Uid
