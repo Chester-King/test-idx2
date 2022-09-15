@@ -66,7 +66,7 @@ export async function handleTokenMintEvent(params : TokenMintEvent) {
 		token.basetoken = params.basetoken.toBase58();
 		token.amount = 0;
 		token.receiver = params.receiver.toBase58();
-		token.derivativetoken = params.receiver.toBase58();
+		token.derivativetoken = params.derivativetoken.toBase58();
 		token.burnedAmount = 0;
 	}
 	let prev_amount = new BN(token.amount);
