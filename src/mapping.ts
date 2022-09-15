@@ -19,6 +19,7 @@ export async function handleDerivativeRegEvent(params : DerivativeRegEvent) {
 		derivative.baseToken = params.basetoken.toBase58();
 		derivative.timestamp = params.timestamp.toString();
 		derivative.derivativeInitializer = params.derivativeinitializer.toBase58();
+		derivative.tokenHolders = "";
 	}
 	await derivative.save();
 
@@ -31,6 +32,10 @@ export async function handleDerivativeRegEvent(params : DerivativeRegEvent) {
 				derivatives_list.push(params.derivativetoken.toBase58());
 				project.derivatives = derivatives_list.toString();
 			}
+		} else if(derivatives.length === 0){
+			project.derivatives = params.derivativetoken.toBase58();
+		} else {
+			project.derivatives = derivatives + "," + params.derivativetoken.toBase58();
 		}
 	}
 	await project.save();
@@ -46,6 +51,7 @@ export async function handleTokenRegEvent(params : TokenRegEvent) {
 		project.description = params.desc.toString();
 		project.tokenDecimal = params.tokendecimal;
 		project.tokenOwner = params.tokenowner.toBase58();
+		project.derivatives = "";
 	}
 	await project.save();
 }
@@ -69,13 +75,17 @@ export async function handleTokenMintEvent(params : TokenMintEvent) {
 
 	let derivative = await Derivative.load(params.derivativetoken.toBase58());
 	if (derivative != null){
-		let tokenHolders = derivative.tokenHolders.toString();
-		if (tokenHolders.includes(",")) {
-			let tokenHolders_list = tokenHolders.split(",");
+		let tokenHolders_ = derivative.tokenHolders.toString();
+		if (tokenHolders_.includes(",")) {
+			let tokenHolders_list = tokenHolders_.split(",");
 			if (!tokenHolders_list.includes(params.receiver.toBase58())){
 				tokenHolders_list.push(params.receiver.toBase58());
-				derivative.tokenHolders = tokenHolders.toString();
-			}
+				derivative.tokenHolders = tokenHolders_.toString();
+			} 
+		} else if(tokenHolders_.length === 0){
+			derivative.tokenHolders = params.receiver.toBase58();
+		} else {
+			derivative.tokenHolders = tokenHolders_ + "," + params.receiver.toBase58();
 		}
 	}
 	await derivative.save();
