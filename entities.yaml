@@ -13,6 +13,9 @@ entities:
       - name: derivativeInitializer
         type: string
         primary: false
+      - name: tokenHolders
+        type: string
+        primary: false
   - name: Project
     params:
       - name: tokenMint
@@ -30,6 +33,9 @@ entities:
       - name: tokenDecimal
         type: number
         primary: false
+      - name: derivatives
+        type: string
+        primary: false
   - name: Token
     params:
       - name: id
@@ -39,7 +45,7 @@ entities:
         type: string
         primary: false
       - name: amount
-        type: string
+        type: number
         primary: false
       - name: receiver
         type: string
@@ -48,5 +54,5 @@ entities:
         type: string
         primary: false
       - name: burnedAmount
-        type: string
+        type: number
         primary: false

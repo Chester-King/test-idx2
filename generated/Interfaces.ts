@@ -40,6 +40,7 @@ export class Derivative {
 	"baseToken":string;
 	"timestamp":string;
 	"derivativeInitializer":string;
+	"tokenHolders":string;
 
 	static async load(derivativeToken:string) : Promise<null | Derivative> {
 		return null;
@@ -54,6 +55,7 @@ export class Project {
 	"description":string;
 	"tokenOwner":string;
 	"tokenDecimal":number;
+	"derivatives":string;
 
 	static async load(tokenMint:string) : Promise<null | Project> {
 		return null;
@@ -65,10 +67,10 @@ export class Project {
 export class Token {
 	"id":string;
 	"basetoken":string;
-	"amount":string;
+	"amount":number;
 	"receiver":string;
 	"derivativetoken":string;
-	"burnedAmount":string;
+	"burnedAmount":number;
 
 	static async load(id:string) : Promise<null | Token> {
 		return null;

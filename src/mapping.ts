@@ -21,6 +21,19 @@ export async function handleDerivativeRegEvent(params : DerivativeRegEvent) {
 		derivative.derivativeInitializer = params.derivativeinitializer.toBase58();
 	}
 	await derivative.save();
+
+	let project = await Project.load(params.basetoken.toBase58());
+	if (project != null){
+		let derivatives = project.derivatives.toString();
+		if (derivatives.includes(",")) {
+			let derivatives_list = derivatives.split(",");
+			if (!derivatives_list.includes(params.derivativetoken.toBase58())){
+				derivatives_list.push(params.derivativetoken.toBase58());
+				project.derivatives = derivatives_list.toString();
+			}
+		}
+	}
+	await project.save();
 }
 
 export async function handleTokenRegEvent(params : TokenRegEvent) {
@@ -45,14 +58,27 @@ export async function handleTokenMintEvent(params : TokenMintEvent) {
 		token = new Token();
 		token.id = id;
 		token.basetoken = params.basetoken.toBase58();
-		token.amount = "0";
+		token.amount = 0;
 		token.receiver = params.receiver.toBase58();
 		token.derivativetoken = params.receiver.toBase58();
-		token.burnedAmount = "0";
+		token.burnedAmount = 0;
 	}
 	let prev_amount = new BN(token.amount);
-	token.amount = prev_amount.add(new BN(params.amount));
+	token.amount = prev_amount.add(new BN(params.amount)).toString(10);
 	await token.save();
+
+	let derivative = await Derivative.load(params.derivativetoken.toBase58());
+	if (derivative != null){
+		let tokenHolders = derivative.tokenHolders.toString();
+		if (tokenHolders.includes(",")) {
+			let tokenHolders_list = tokenHolders.split(",");
+			if (!tokenHolders_list.includes(params.receiver.toBase58())){
+				tokenHolders_list.push(params.receiver.toBase58());
+				derivative.tokenHolders = tokenHolders.toString();
+			}
+		}
+	}
+	await derivative.save();
 }
 
 export async function handleTokenBurnEvent(params : TokenBurnEvent) {
@@ -63,10 +89,10 @@ export async function handleTokenBurnEvent(params : TokenBurnEvent) {
 		token = new Token();
 		token.id = id;
 		token.basetoken = params.basetoken.toBase58();
-		token.amount = "0";
+		token.amount = 0;
 		token.receiver = params.receiver.toBase58();
 		token.derivativetoken = params.receiver.toBase58();
-		token.burnedAmount = "0";
+		token.burnedAmount = 0;
 	}
 	let prev_amount = new BN(token.amount);
 	token.amount = (prev_amount.sub(new BN(params.amount))).toString(10);
