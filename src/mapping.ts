@@ -101,7 +101,7 @@ export async function handleTokenBurnEvent(params : TokenBurnEvent) {
 		token.basetoken = params.basetoken.toBase58();
 		token.amount = 0;
 		token.receiver = params.receiver.toBase58();
-		token.derivativetoken = params.receiver.toBase58();
+		token.derivativetoken = params.derivativetoken.toBase58();
 		token.burnedAmount = 0;
 	}
 	let prev_amount = new BN(token.amount);
