@@ -1,96 +1,78 @@
 import {
-	U64Event,
-	StringEvent,
-	PubkeyEvent,
-	U8Event,
-	NormalEntity,
-	AdvanceEntity
+	DerivativeRegEvent,
+	TokenRegEvent,
+	TokenMintEvent,
+	TokenBurnEvent,
+	Derivative,
+	Project,
+	Token
 } from '../generated/Interfaces';
 
 import { BN } from '@project-serum/anchor';
 import { PublicKey } from '@solana/web3.js';
-export async function handleU64Event(params : U64Event) {
+export async function handleDerivativeRegEvent(params : DerivativeRegEvent) {
 	//TODO: Implement
-	console.log("HANDLEU64EVENT REACHED !!!!!!!!!")
-	console.log(params.data);
-	let norment =  await NormalEntity.load(params.data.toNumber());
-	if (norment == null) {
-		norment = new NormalEntity();
-		norment.Uid = params.data.toNumber();
+	let derivative = await Derivative.load(params.derivativetoken.toBase58());
+	if (derivative == null){
+		derivative = new Derivative();
+		derivative.derivativeToken = params.derivativetoken.toBase58();
+		derivative.baseToken = params.basetoken.toBase58();
+		derivative.timestamp = params.timestamp.toString();
+		derivative.derivativeInitializer = params.derivativeinitializer.toBase58();
 	}
-
-	let advment =  await AdvanceEntity.load(params.data.toNumber());
-	if (advment == null) {
-		advment = new AdvanceEntity();
-		advment.Uid = params.data.toNumber();
-	}
-	await norment.save();
-	await advment.save();
+	await derivative.save();
 }
 
-export async function handleStringEvent(params : StringEvent) {
+export async function handleTokenRegEvent(params : TokenRegEvent) {
 	//TODO: Implement
-	console.log(params.uid);
-	let norment =  await NormalEntity.load(params.uid.toNumber());
-	if (norment == null) {
-		norment = new NormalEntity();
-		norment.Uid = params.uid.toNumber();
+	let project = await Project.load(params.tokenmint.toBase58());
+	if (project == null){
+		project = new Project();
+		project.tokenMint = params.tokenmint.toBase58();
+		project.name = params.name.toString();
+		project.description = params.desc.toString();
+		project.tokenDecimal = params.tokendecimal;
+		project.tokenOwner = params.tokenowner.toBase58();
 	}
-	norment.svalue = params.data;
-
-	let advment =  await AdvanceEntity.load(params.uid.toNumber());
-	if (advment == null) {
-		advment = new AdvanceEntity();
-		advment.Uid = params.uid.toNumber();
-	}
-	if (advment.svalue == null) {
-		advment.svalue = params.data;
-	} else {
-		advment.svalue += params.data;
-	}
-	await norment.save();
-	await advment.save();
+	await project.save();
 }
 
-export async function handlePubkeyEvent(params : PubkeyEvent) {
+export async function handleTokenMintEvent(params : TokenMintEvent) {
 	//TODO: Implement
-	let norment =  await NormalEntity.load(params.uid.toNumber());
-	if (norment == null) {
-		norment = new NormalEntity();
-		norment.Uid = params.uid.toNumber();
+	let id = params.basetoken.toBase58() + "-" + params.derivativetoken.toBase58() + "|" + params.receiver.toBase58();
+	let token = await Token.load(id);
+	if (token == null) {
+		token = new Token();
+		token.id = id;
+		token.basetoken = params.basetoken.toBase58();
+		token.amount = "0";
+		token.receiver = params.receiver.toBase58();
+		token.derivativetoken = params.receiver.toBase58();
+		token.burnedAmount = "0";
 	}
-	norment.keyvalue = params.data.toBase58();
-
-	let advment =  await AdvanceEntity.load(params.uid.toNumber());
-	if (advment == null) {
-		advment = new AdvanceEntity();
-		advment.Uid = params.uid.toNumber();
-	}
-	advment.keyvalue = params.data.toBase58();
-	await norment.save();
-	await advment.save();
+	let prev_amount = new BN(token.amount);
+	token.amount = prev_amount.add(new BN(params.amount));
+	await token.save();
 }
 
-export async function handleU8Event(params : U8Event) {
+export async function handleTokenBurnEvent(params : TokenBurnEvent) {
 	//TODO: Implement
-	let norment =  await NormalEntity.load(params.uid.toNumber());
-	if (norment == null) {
-		norment = new NormalEntity();
-		norment.Uid = params.uid.toNumber();
+	let id = params.basetoken.toBase58() + "-" + params.derivativetoken.toBase58() + "|" + params.receiver.toBase58();
+	let token = await Token.load(id);
+	if (token == null) {
+		token = new Token();
+		token.id = id;
+		token.basetoken = params.basetoken.toBase58();
+		token.amount = "0";
+		token.receiver = params.receiver.toBase58();
+		token.derivativetoken = params.receiver.toBase58();
+		token.burnedAmount = "0";
 	}
-	norment.u8value = params.data;
+	let prev_amount = new BN(token.amount);
+	token.amount = (prev_amount.sub(new BN(params.amount))).toString(10);
 
-	let advment =  await AdvanceEntity.load(params.uid.toNumber());
-	if (advment == null) {
-		advment = new AdvanceEntity();
-		advment.Uid = params.uid.toNumber();
-	}
-	if (advment.u8value == null) {
-		advment.u8value = params.data;
-	} else {
-		advment.u8value += params.data;
-	}
-	await norment.save();
-	await advment.save();
+	let prev_burn_amount = new BN(token.burnedAmount);
+	token.burnedAmount = (prev_burn_amount.add(new params.amount)).toString(10);
+	await token.save();
 }
 

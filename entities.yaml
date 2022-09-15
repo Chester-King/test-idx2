@@ -1,29 +1,52 @@
 entities:
-  - name: NormalEntity
+  - name: Derivative
     params:
-      - name: Uid
-        type: number
+      - name: derivativeToken
+        type: string
         primary: true
-      - name: svalue
+      - name: baseToken
         type: string
         primary: false
-      - name: u8value
-        type: number
-        primary: false
-      - name: keyvalue
+      - name: timestamp
         type: string
         primary: false
-  - name: AdvanceEntity
+      - name: derivativeInitializer
+        type: string
+        primary: false
+  - name: Project
     params:
-      - name: Uid
-        type: number
+      - name: tokenMint
+        type: string
         primary: true
-      - name: svalue
+      - name: name
         type: string
         primary: false
-      - name: u8value
+      - name: description
+        type: string
+        primary: false
+      - name: tokenOwner
+        type: string
+        primary: false
+      - name: tokenDecimal
         type: number
         primary: false
-      - name: keyvalue
+  - name: Token
+    params:
+      - name: id
+        type: string
+        primary: true
+      - name: basetoken
+        type: string
+        primary: false
+      - name: amount
+        type: string
+        primary: false
+      - name: receiver
+        type: string
+        primary: false
+      - name: derivativetoken
+        type: string
+        primary: false
+      - name: burnedAmount
         type: string
         primary: false
